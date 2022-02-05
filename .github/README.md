@@ -1,6 +1,17 @@
+<!-- toc -->
+<div style="text-align: center;">
+
+# CGTK.Utils.Scenes
+
 ![Version](https://img.shields.io/github/package-json/v/Walter-Hulsebos/Utils.Scenes?style=for-the-badge)
 ![Stars](https://img.shields.io/github/stars/Walter-Hulsebos/Utils.Scenes?color=orange&style=for-the-badge)
-# CGTK.Utils.Scenes
+[![Discord](https://img.shields.io/discord/763171539763462144?color=%237289DA&label=discord&logo=discord&style=for-the-badge)](https://discord.gg/S9wHQ96)
+
+</div>
+<!-- tocstop -->
+
+------
+
 <table>
 <tr>
 <td>
@@ -20,7 +31,7 @@ Part of the **CGTK** Framework. (**C**ommon **G**ames **T**ool **K**it)
 • [💬 Issues](  https://github.com/Walter-Hulsebos/Utils.Scenes/issues)
 • [📝 License]( https://github.com/Walter-Hulsebos/Utils.Scenes/blob/stable/LICENSE)
 ------
-## Installation
+# Installation
 
 ### Option 1 - Add from GitHub
 <details>
@@ -36,8 +47,19 @@ Part of the **CGTK** Framework. (**C**ommon **G**ames **T**ool **K**it)
 
 ### Option 2 - Add from OpenUPM
 
-W.I.P
+*Work In Progress*
 
-------
-## Usage
-W.I.P
+# Examples
+*Work In Progress*
+
+# License
+
+[**The Unlicense**](../LICENSE.md)
+  ```text
+  This is free and unencumbered software released into the public domain.
+    
+  Anyone is free to copy, modify, publish, use, compile, sell, or
+  distribute this software, either in source code form or as a compiled
+  binary, for any purpose, commercial or non-commercial, and by any
+  means.
+  ```
