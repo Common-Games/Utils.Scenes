@@ -1,0 +1,30 @@
+{
+  "name": "com.common-games.utils.scenes",
+  "displayName": "CGTK.Utils.Scenes",
+  "version": "0.0.0",
+  "unity": "2020.3",
+  "description": "Aims to deliver a smoother experience of working with (multiple) scenes.",
+  "keywords": [
+    "unity",
+    "unity3d",
+    "upm",
+    "common-games",
+    "utility"
+  ],
+  "homepage": "https://github.com/common-games/Utils.Scenes.git",
+  "bugs": 
+  {
+    "url": "https://github.com/common-games/Utils.Scenes/issues"
+  },
+  "repository": 
+  {
+    "type": "git",
+    "url": "git+ssh://git@github.com/common-games/Utils.Scenes.git"
+  },
+  "license": "The Unlicense",
+  "author": "Common-Games (https://github.com/Common-Games)",
+  "scripts": 
+  {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  }
+}
