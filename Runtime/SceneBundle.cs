@@ -18,6 +18,14 @@ using UnityEditor.UIElements;
    
 using JetBrains.Annotations;
 
+/*
+#if ODIN_INSPECTOR
+using ScriptableObject = Sirenix.OdinInspector.SerializedScriptableObject;
+#else
+using ScriptableObject = UnityEngine.ScriptableObject;
+#endif
+*/
+
 using static CGTK.Utils.Scenes.LoadMode;
 
 namespace CGTK.Utils.Scenes
@@ -110,10 +118,22 @@ namespace CGTK.Utils.Scenes
 		
 		#region Custom Editor
 
+		#if UNITY_EDITOR
+		[OnOpenAsset(callbackOrder: 1)]
+		private static bool OnOpenAsset(int id, int line) 
+		{
+			Object _obj = EditorUtility.InstanceIDToObject(instanceID: id);
+
+			if (_obj is not SceneBundle _bundle) return false;
+				
+			_bundle.Load();
+			return true;
+		}
+		
+		/*
 		[CustomEditor(inspectedType: typeof(SceneBundle))]
 		private sealed class SceneBundleEditor : Editor 
 		{
-			/*
 			public override VisualElement CreateInspectorGUI()
 			{
 				VisualElement _container = new VisualElement();
@@ -122,19 +142,9 @@ namespace CGTK.Utils.Scenes
 
 				return _container;
 			}
-			*/
-
-			[OnOpenAsset(callbackOrder: 1)]
-			private static bool OnOpenAsset(int id, int line) 
-			{
-				Object _obj = EditorUtility.InstanceIDToObject(instanceID: id);
-
-				if (_obj is not SceneBundle _bundle) return false;
-				
-				_bundle.Load();
-				return true;
-			}
 		}
+		*/
+		#endif
 
 		#endregion
 	}
