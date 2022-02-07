@@ -18,6 +18,8 @@ using UnityEditor.UIElements;
    
 using JetBrains.Annotations;
 
+using static CGTK.Utils.Scenes.LoadMode;
+
 namespace CGTK.Utils.Scenes
 {
 	//#if ODIN_INSPECTOR
@@ -80,82 +82,25 @@ namespace CGTK.Utils.Scenes
 
 		#region Methods
 
-		public void Load(LoadSceneMode mode = LoadSceneMode.Single) //In editor we should actually use OpenSceneMode for some godawful reason, but I refuse.
+		public void Load(LoadMode mode = Overwrite)
 		{
 			bool _isFirstScene = true;
 			foreach (SceneInfo _sceneInfo in Scenes)
 			{
-				#if UNITY_EDITOR 
-
-				bool _isInEditMode = !Application.isPlaying;
+				LoadMode _loadMode;
 				
-				if (_isInEditMode)
+				if (_isFirstScene && _sceneInfo.loadScene) //will ignore the first scene completely if it's not set as loadScene 
 				{
-					OpenSceneMode _openSceneMode;
-
-					if (_isFirstScene) //&& info.loadScene) 
-					{
-						//map loadSceneMode to openSceneMode
-						_openSceneMode = (mode == LoadSceneMode.Single) ? OpenSceneMode.Single : OpenSceneMode.Additive; 
-						
-						_isFirstScene = false;
-					}
-					else
-					{
-						_openSceneMode = _sceneInfo.loadScene
-							? OpenSceneMode.Additive
-							: OpenSceneMode.AdditiveWithoutLoading;
-					}
-					
-					EditorSceneManager.OpenScene(scenePath: _sceneInfo.scene.Path, mode: _openSceneMode);
-					
-					continue;
+					_loadMode = mode;
+					_isFirstScene = false;
 				}
-				
-				#endif
-
-				if (_sceneInfo.loadScene)
+				else
 				{
-					_sceneInfo.scene.Load(mode);	
+					_loadMode = (_sceneInfo.loadScene) ? Additive : AdditiveWithoutLoading;
 				}
+
+				_sceneInfo.scene.Load(mode: _loadMode);
 			}
-			
-			void LoadScene(SceneInfo info)
-			{
-				#if UNITY_EDITOR 
-
-				bool _isInEditMode = !Application.isPlaying;
-				
-				if (_isInEditMode)
-				{
-					OpenSceneMode _openSceneMode;
-
-					if (_isFirstScene) //&& info.loadScene) 
-					{
-						_openSceneMode = (mode == LoadSceneMode.Single) ? OpenSceneMode.Single : OpenSceneMode.Additive;
-						
-						_isFirstScene = false;
-					}
-					else
-					{
-						_openSceneMode = info.loadScene
-							? OpenSceneMode.Additive
-							: OpenSceneMode.AdditiveWithoutLoading;
-					}
-					
-					EditorSceneManager.OpenScene(scenePath: info.scene.Path, mode: _openSceneMode);
-					
-					return;
-				}
-				
-				#endif
-
-				if (info.loadScene)
-				{
-					info.scene.Load(mode);	
-				}
-			}
-			
 		}
 
 		#endregion

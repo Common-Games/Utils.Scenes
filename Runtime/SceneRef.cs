@@ -1,6 +1,7 @@
 using System;
 
 using UnityEngine;
+using static CGTK.Utils.Scenes.LoadMode;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -50,11 +51,13 @@ namespace CGTK.Utils.Scenes
 
         #region Methods
 
-        public void Load(LoadSceneMode mode = LoadSceneMode.Single)
+        public void Load(LoadMode mode = Overwrite)
         {
-            #if UNITY_EDITOR 
-            SceneManager.LoadScene(sceneBuildIndex: Index, mode: mode);
-            #endif
+            (Action<SceneRef> _action, _) = mode;
+				
+            _action.Invoke(obj: this);
+            
+            //SceneManager.LoadScene(sceneBuildIndex: Index, mode: mode);
         }
         
         public void LoadAsync(LoadSceneMode mode = LoadSceneMode.Single)
