@@ -2,13 +2,13 @@ using UnityEngine;
 
 namespace CGTK.Utils.Scenes.Samples.ScriptUsage.Samples.ScriptUsage
 {
-    public sealed class SceneRefUsage : MonoBehaviour
+    public sealed class SceneBundleUsage : MonoBehaviour
     {
-        [SerializeField] private SceneRef scene;
-
+        [SerializeField] private SceneBundle scenes;
+        
         private void Start()
         {
-            scene.Load();
+            scenes.Load();
         }
     }
 }

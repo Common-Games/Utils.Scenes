@@ -10,21 +10,27 @@ using UnityEngine.SceneManagement;
 namespace CGTK.Utils.Scenes
 {
     [Serializable]
-    public sealed class SceneRef
+    public sealed partial class SceneRef
     {
-        [field: SerializeField] public string ScenePath  { get; private set; } = string.Empty;
-        [field: SerializeField] public int BuildIndex    { get; private set; } = -1;
+        #region Fields
+        
+        [field: SerializeField] public string Path  { get; private set; } = string.Empty;
+        [field: SerializeField] public int    Index { get; private set; } = -1;
         #if UNITY_EDITOR
-        [field: SerializeField] public SceneAsset Asset  { get; private set; } = null;
+        [field: SerializeField] public SceneAsset Asset { get; private set; } = null;
         #endif
+        
+        #endregion
+
+        #region Structors
         
         public SceneRef(string scenePath)
         {
-            this.ScenePath = scenePath;
+            this.Path = scenePath;
         }
-        public SceneRef(int buildIndex)
+        public SceneRef(int sceneBuildIndex)
         {
-            this.BuildIndex = buildIndex;
+            this.Index = sceneBuildIndex;
         }
         #if UNITY_EDITOR
         public SceneRef(SceneAsset sceneAsset)
@@ -33,18 +39,40 @@ namespace CGTK.Utils.Scenes
         }
         #endif
         
-        public static implicit operator string (SceneRef reference) => reference.ScenePath;
-        public static implicit operator int    (SceneRef reference) => reference.BuildIndex;
+        #endregion
+
+        #region Operators
+
+        public static implicit operator string (SceneRef reference) => reference.Path;
+        public static implicit operator int    (SceneRef reference) => reference.Index;
+        
+        #endregion
+
+        #region Methods
+
+        public void Load(LoadSceneMode mode = LoadSceneMode.Single)
+        {
+            #if UNITY_EDITOR 
+            SceneManager.LoadScene(sceneBuildIndex: Index, mode: mode);
+            #endif
+        }
+        
+        public void LoadAsync(LoadSceneMode mode = LoadSceneMode.Single)
+        {
+            SceneManager.LoadSceneAsync(sceneBuildIndex: Index, mode: mode);
+        }
+
+        #endregion
 
         #region Custom PropertyDrawer
 
         #if UNITY_EDITOR
         [CustomPropertyDrawer(type: typeof(SceneRef))]
-        public class SceneRefDrawer : PropertyDrawer
+        public sealed partial class SceneRefDrawer : PropertyDrawer
         {
-            private const string _SCENE_PATH  = "<" + nameof(ScenePath)  + ">k__BackingField";
-            private const string _BUILD_INDEX = "<" + nameof(BuildIndex) + ">k__BackingField";
-            private const string _SCENE_ASSET = "<" + nameof(Asset)      + ">k__BackingField";
+            private const string _PATH  = "<" + nameof(Path)  + ">k__BackingField";
+            private const string _INDEX = "<" + nameof(Index) + ">k__BackingField";
+            private const string _ASSET = "<" + nameof(Asset) + ">k__BackingField";
 
             private SerializedProperty _scenePathProperty;
             private SerializedProperty _buildIndexProperty;
@@ -52,14 +80,13 @@ namespace CGTK.Utils.Scenes
             
             public override void OnGUI(Rect position, SerializedProperty property, GUIContent label)
             {
-                _scenePathProperty  = property.FindPropertyRelative(relativePropertyPath: _SCENE_PATH);
-                _buildIndexProperty = property.FindPropertyRelative(relativePropertyPath: _BUILD_INDEX);
-                _sceneAssetProperty = property.FindPropertyRelative(relativePropertyPath: _SCENE_ASSET);
+                _scenePathProperty  = property.FindPropertyRelative(relativePropertyPath: _PATH);
+                _buildIndexProperty = property.FindPropertyRelative(relativePropertyPath: _INDEX);
+                _sceneAssetProperty = property.FindPropertyRelative(relativePropertyPath: _ASSET);
                 
                 SceneAsset _currentSceneAsset = _sceneAssetProperty.objectReferenceValue as SceneAsset;
                 _currentSceneAsset ??= AssetDatabase.LoadAssetAtPath<SceneAsset>(assetPath: _scenePathProperty.stringValue);
-
-                //SceneAsset _newSceneAsset;
+                
                 EditorGUI.BeginChangeCheck();
                 
                 Rect _newPosition = new(x: position.x, y: position.y,
@@ -75,7 +102,7 @@ namespace CGTK.Utils.Scenes
 
                 if (EditorGUI.EndChangeCheck())
                 {
-                    OnChange(_newSceneAsset);
+                    OnChange(newSceneAsset: _newSceneAsset);
                 }
             }
 
