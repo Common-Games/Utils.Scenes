@@ -51,13 +51,12 @@ namespace CGTK.Utils.Scenes
 
         #region Methods
 
+        private Action<SceneRef> _loadAction; //TODO: Cache LoadAction.
         public void Load(LoadMode mode = Overwrite)
         {
-            (Action<SceneRef> _action, _) = mode;
-				
-            _action.Invoke(obj: this);
+            mode.GetLoadAction(action: out _loadAction);
             
-            //SceneManager.LoadScene(sceneBuildIndex: Index, mode: mode);
+            _loadAction.Invoke(obj: this);
         }
         
         public void LoadAsync(LoadSceneMode mode = LoadSceneMode.Single)

@@ -18,18 +18,11 @@ namespace CGTK.Utils.Scenes
         Overwrite,
         Additive,
         AdditiveWithoutLoading,
-        
-        /*
-        AsyncSingle,                
-        AsyncAdditive,              
-        AsyncAdditiveWithoutLoading,
-        */
     }
     
     public static class LoadModeExtensions
     {
-        //Hacky ass code, but blame the C# team for not allowing operators in enums OR extension methods.
-        public static void Deconstruct(this LoadMode mode, out Action<SceneRef> action, out bool _)
+        public static void GetLoadAction(this LoadMode mode, out Action<SceneRef> action)
         {
             #if UNITY_EDITOR
             
@@ -39,17 +32,14 @@ namespace CGTK.Utils.Scenes
             {
                 switch (mode)
                 {
-                    case Overwrite:
-                    //case AsyncSingle: 
-                        (action, _) = (OpenSceneSingle, false);
+                    case Overwrite: 
+                        action = scene => OpenScene(scenePath: scene.Path, mode: OpenSceneMode.Single);
                         return;
-                    case Additive:
-                    //case AsyncAdditive:
-                        (action, _) = (OpenSceneAdditive, false);
+                    case Additive: 
+                        action = scene => OpenScene(scenePath: scene.Path, mode: OpenSceneMode.Additive);
                         return;
-                    case AdditiveWithoutLoading:
-                    //case AsyncAdditiveWithoutLoading:
-                        (action, _) = (OpenSceneAdditiveWithoutLoading, false);
+                    case AdditiveWithoutLoading: 
+                        action = scene => OpenScene(scenePath: scene.Path, mode: OpenSceneMode.AdditiveWithoutLoading);
                         return;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
@@ -61,70 +51,60 @@ namespace CGTK.Utils.Scenes
             switch (mode)
             {
                 case Overwrite:
-                    (action, _) = (LoadSceneSingle, false);
+                    action = scene => LoadScene(sceneBuildIndex: scene.Index, mode: LoadSceneMode.Single);
                     return;
                 case Additive:
-                    (action, _) = (LoadSceneAdditive, false);
+                    action = scene => LoadScene(sceneBuildIndex: scene.Index, mode: LoadSceneMode.Additive);
                     return;
                 case AdditiveWithoutLoading:
-                    (action, _) = (LoadSceneAdditiveWithoutLoading, false);
+                    action = scene => Debug.Log(message: $"Ignoring Scene {scene}");
                     return;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
-                
-                /*
-                case AsyncSingle: 
-                    (action, throwAway) = OpenSceneSingle;
-                    return;
-                case AsyncAdditive:
-                    (action, throwAway) = OpenSceneAdditive;
-                    return;
-                case AsyncAdditiveWithoutLoading:
-                    (action, throwAway) = OpenSceneAdditiveWithoutLoading;
-                    return;
-                */
             }
         }
+        
+        //Hacky ass code, but blame the C# team for not allowing operators in enums OR extension methods.
+        public static void Deconstruct(this LoadMode mode, out Action<SceneRef> action, out bool _) //func for async?
+        {
+            #if UNITY_EDITOR
+            
+            bool _isInEditMode = !Application.isPlaying;
 
-        private static void OpenSceneSingle(SceneRef scene)
-        {
-            OpenScene(scenePath: scene.Path, mode: OpenSceneMode.Single);
+            if (_isInEditMode)
+            {
+                switch (mode)
+                {
+                    case Overwrite:
+                        (action, _) = (scene => OpenScene(scenePath: scene.Path, mode: OpenSceneMode.Single), false);
+                        return;
+                    case Additive:
+                        (action, _) = (scene => OpenScene(scenePath: scene.Path, mode: OpenSceneMode.Additive), false);
+                        return;
+                    case AdditiveWithoutLoading:
+                        (action, _) = (scene => OpenScene(scenePath: scene.Path, mode: OpenSceneMode.AdditiveWithoutLoading), false);
+                        return;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
+                }
+            }
+
+            #endif
+            
+            switch (mode)
+            {
+                case Overwrite:
+                    (action, _) = (scene => LoadScene(sceneBuildIndex: scene.Index, mode: LoadSceneMode.Single), false);
+                    return;
+                case Additive:
+                    (action, _) = (scene => LoadScene(sceneBuildIndex: scene.Index, mode: LoadSceneMode.Additive), false);
+                    return;
+                case AdditiveWithoutLoading:
+                    (action, _) = (scene => Debug.Log(message: $"Ignoring Scene {scene}"), false);
+                    return;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
+            }
         }
-        private static void OpenSceneAdditive(SceneRef scene)
-        {
-            OpenScene(scenePath: scene.Path, mode: OpenSceneMode.Additive);
-        }
-        private static void OpenSceneAdditiveWithoutLoading(SceneRef scene)
-        {
-            OpenScene(scenePath: scene.Path, mode: OpenSceneMode.AdditiveWithoutLoading);
-        }
-        
-        private static void LoadSceneSingle(SceneRef scene)
-        {
-            LoadScene(sceneBuildIndex: scene.Index, mode: LoadSceneMode.Single);
-        }
-        private static void LoadSceneAdditive(SceneRef scene)
-        {
-            LoadScene(sceneBuildIndex: scene.Index, mode: LoadSceneMode.Additive);
-        }
-        private static void LoadSceneAdditiveWithoutLoading(SceneRef scene)
-        {
-            Debug.Log(message: $"Ignoring Scene {scene}");
-        }
-        
-        /*
-        private static void LoadSceneAsyncSingle(SceneRef scene)
-        {
-            LoadSceneAsync(sceneBuildIndex: scene.Index, mode: LoadSceneMode.Single);
-        }
-        private static void LoadSceneAsyncAdditive(SceneRef scene)
-        {
-            LoadScene(sceneBuildIndex: scene.Index, mode: LoadSceneMode.Additive);
-        }
-        private static void LoadSceneAsyncAdditiveWithoutLoading(SceneRef scene)
-        {
-            OpenScene(scenePath: scene.Path, mode: OpenSceneMode.AdditiveWithoutLoading);
-        }
-        */
     }
 }

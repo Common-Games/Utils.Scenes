@@ -82,6 +82,7 @@ namespace CGTK.Utils.Scenes
 
 		#region Methods
 
+		//TODO: Load Async
 		public void Load(LoadMode mode = Overwrite)
 		{
 			bool _isFirstScene = true;
