@@ -26,5 +26,13 @@
   "scripts": 
   {
     "test": "echo \"Error: no test specified\" && exit 1"
-  }
+  },
+  "samples": 
+  [
+    {
+      "displayName": "Script Usage",
+      "description": "Contains small code samples on how to use all additions of this package.",
+      "path": "Samples~/ScriptUsage"
+    }
+  ]
 }
