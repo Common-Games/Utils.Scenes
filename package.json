@@ -1,7 +1,7 @@
 {
   "name": "com.common-games.utils.scenes",
   "displayName": "CGTK.Utils.Scenes",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "unity": "2021.1",
   "description": "Aims to deliver a smoother experience of working with (multiple) scenes.",
   "keywords": [
