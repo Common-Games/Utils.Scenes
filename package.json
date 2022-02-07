@@ -1,8 +1,8 @@
 {
   "name": "com.common-games.utils.scenes",
   "displayName": "CGTK.Utils.Scenes",
-  "version": "0.0.0",
-  "unity": "2020.3",
+  "version": "0.1.1",
+  "unity": "2021.1",
   "description": "Aims to deliver a smoother experience of working with (multiple) scenes.",
   "keywords": [
     "unity",
@@ -12,23 +12,19 @@
     "utility"
   ],
   "homepage": "https://github.com/common-games/Utils.Scenes.git",
-  "bugs": 
-  {
+  "bugs": {
     "url": "https://github.com/common-games/Utils.Scenes/issues"
   },
-  "repository": 
-  {
+  "repository": {
     "type": "git",
     "url": "git+ssh://git@github.com/common-games/Utils.Scenes.git"
   },
   "license": "The Unlicense",
   "author": "Common-Games (https://github.com/Common-Games)",
-  "scripts": 
-  {
+  "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "samples": 
-  [
+  "samples": [
     {
       "displayName": "Script Usage",
       "description": "Contains small code samples on how to use all additions of this package.",
