@@ -22,7 +22,7 @@ namespace CGTK.Utils.Scenes
     
     public static class LoadModeExtensions
     {
-        public static void GetLoadAction(this LoadMode mode, out Action<SceneRef> action)
+        public static void GetLoadAction(this LoadMode mode, out Action<SceneReference> action)
         {
             #if UNITY_EDITOR
             
@@ -51,10 +51,10 @@ namespace CGTK.Utils.Scenes
             switch (mode)
             {
                 case Overwrite:
-                    action = scene => LoadScene(sceneBuildIndex: scene.Index, mode: LoadSceneMode.Single);
+                    action = scene => LoadScene(sceneName: scene.Path, mode: LoadSceneMode.Single);
                     return;
                 case Additive:
-                    action = scene => LoadScene(sceneBuildIndex: scene.Index, mode: LoadSceneMode.Additive);
+                    action = scene => LoadScene(sceneName: scene.Path, mode: LoadSceneMode.Additive);
                     return;
                 case AdditiveWithoutLoading:
                     action = scene => Debug.Log(message: $"Ignoring Scene {scene}");

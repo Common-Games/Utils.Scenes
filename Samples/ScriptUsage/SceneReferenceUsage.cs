@@ -2,9 +2,9 @@ using UnityEngine;
 
 namespace CGTK.Utils.Scenes.Samples.ScriptUsage.Samples.ScriptUsage
 {
-    public sealed class SceneRefUsage : MonoBehaviour
+    public sealed class SceneReferenceUsage : MonoBehaviour
     {
-        [SerializeField] private SceneRef scene;
+        [SerializeField] private SceneReference scene;
 
         private void Start()
         {

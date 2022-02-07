@@ -11,7 +11,7 @@ using UnityEngine.SceneManagement;
 namespace CGTK.Utils.Scenes
 {
     [Serializable]
-    public sealed partial class SceneRef
+    public sealed partial class SceneRef : ISerializationCallbackReceiver
     {
         #region Fields
         
@@ -50,18 +50,28 @@ namespace CGTK.Utils.Scenes
         #endregion
 
         #region Methods
-
-        private Action<SceneRef> _loadAction; //TODO: Cache LoadAction.
+        
+        //private Action<SceneRef> _loadAction; //TODO: Cache LoadAction.
         public void Load(LoadMode mode = Overwrite)
         {
-            mode.GetLoadAction(action: out _loadAction);
+            //mode.GetLoadAction(action: out _loadAction);
             
-            _loadAction.Invoke(obj: this);
+            //_loadAction.Invoke(obj: this);
         }
         
         public void LoadAsync(LoadSceneMode mode = LoadSceneMode.Single)
         {
             SceneManager.LoadSceneAsync(sceneBuildIndex: Index, mode: mode);
+        }
+        
+        public void OnBeforeSerialize()
+        {
+            
+        }
+
+        public void OnAfterDeserialize()
+        {
+            
         }
 
         #endregion
@@ -91,7 +101,7 @@ namespace CGTK.Utils.Scenes
                 
                 EditorGUI.BeginChangeCheck();
                 
-                Rect _newPosition = new(x: position.x, y: position.y,
+                Rect _newPosition = new Rect(x: position.x, y: position.y,
                     width: position.width,
                     height: EditorGUIUtility.singleLineHeight);
                 
@@ -140,6 +150,5 @@ namespace CGTK.Utils.Scenes
         #endif
         
         #endregion
-        
     }
 }

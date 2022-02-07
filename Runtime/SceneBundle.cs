@@ -33,16 +33,16 @@ namespace CGTK.Utils.Scenes
 		[Serializable]
 		public partial struct SceneInfo
 		{
-			public SceneRef scene;
-			public bool loadScene;
+			public SceneReference scene;
+			public bool load;
 
-			public SceneInfo(SceneRef scene = null, bool loadScene = true)
+			public SceneInfo(SceneReference scene = null, bool load = true)
 			{
 				this.scene     = scene;
-				this.loadScene = loadScene;
+				this.load = load;
 			}
 
-			public static implicit operator SceneRef(SceneInfo sceneInfo) => sceneInfo.scene;
+			public static implicit operator SceneReference(SceneInfo sceneInfo) => sceneInfo.scene;
 			
 			#region Custom Property Drawer
 			
@@ -50,12 +50,12 @@ namespace CGTK.Utils.Scenes
 			[CustomPropertyDrawer(type: typeof(SceneInfo))]
 			private sealed class SceneInfoDrawer : PropertyDrawer
 			{
-				private const string _LOAD  = nameof(loadScene);
+				private const string _LOAD  = nameof(load);
 				private const string _SCENE = nameof(scene);
 
 				public override VisualElement CreatePropertyGUI(SerializedProperty property)
 				{
-					VisualElement _container = new();
+					VisualElement _container = new VisualElement();
 					
 					PropertyField _loadField  = new(property: property.FindPropertyRelative(relativePropertyPath: _LOAD),  label: "");
 					PropertyField _sceneField = new(property: property.FindPropertyRelative(relativePropertyPath: _SCENE), label: "");
@@ -67,7 +67,7 @@ namespace CGTK.Utils.Scenes
 				}
 			}
 			#endif
-			
+
 			#endregion
 		}
 
@@ -90,14 +90,14 @@ namespace CGTK.Utils.Scenes
 			{
 				LoadMode _loadMode;
 				
-				if (_isFirstScene && _sceneInfo.loadScene) //will ignore the first scene completely if it's not set as loadScene 
+				if (_isFirstScene && _sceneInfo.load) //will ignore the first scene completely if it's not set as loadScene 
 				{
 					_loadMode = mode;
 					_isFirstScene = false;
 				}
 				else
 				{
-					_loadMode = (_sceneInfo.loadScene) ? Additive : AdditiveWithoutLoading;
+					_loadMode = (_sceneInfo.load) ? Additive : AdditiveWithoutLoading;
 				}
 
 				_sceneInfo.scene.Load(mode: _loadMode);
@@ -105,7 +105,7 @@ namespace CGTK.Utils.Scenes
 		}
 
 		#endregion
-
+		
 		#region Custom Editor
 
 		[CustomEditor(inspectedType: typeof(SceneBundle))]
@@ -113,7 +113,7 @@ namespace CGTK.Utils.Scenes
 		{
 			public override VisualElement CreateInspectorGUI()
 			{
-				VisualElement _container = new();
+				VisualElement _container = new VisualElement();
 
 				InspectorElement.FillDefaultInspector(container: _container, serializedObject: serializedObject, editor: this);
 
