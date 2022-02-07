@@ -1,0 +1,16 @@
+{
+    "name": "Samples.CGTK.Utils.Scenes.ScriptUsage",
+    "rootNamespace": "CGTK.Utils.Scenes.Samples.ScriptUsage",
+    "references": [
+        "CGTK.Utils.Scenes"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": false,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
