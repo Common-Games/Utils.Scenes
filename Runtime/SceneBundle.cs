@@ -44,6 +44,7 @@ namespace CGTK.Utils.Scenes
 
 			public static implicit operator SceneReference(SceneInfo sceneInfo) => sceneInfo.scene;
 			
+			/*
 			#region Custom Property Drawer
 			
 			#if UNITY_EDITOR
@@ -69,6 +70,7 @@ namespace CGTK.Utils.Scenes
 			#endif
 
 			#endregion
+			*/
 		}
 
 		#endregion
@@ -111,6 +113,7 @@ namespace CGTK.Utils.Scenes
 		[CustomEditor(inspectedType: typeof(SceneBundle))]
 		private sealed class SceneBundleEditor : Editor 
 		{
+			/*
 			public override VisualElement CreateInspectorGUI()
 			{
 				VisualElement _container = new VisualElement();
@@ -119,6 +122,7 @@ namespace CGTK.Utils.Scenes
 
 				return _container;
 			}
+			*/
 
 			[OnOpenAsset(callbackOrder: 1)]
 			private static bool OnOpenAsset(int id, int line) 
