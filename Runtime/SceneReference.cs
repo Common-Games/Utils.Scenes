@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using UnityEngine;
@@ -283,12 +284,12 @@ namespace CGTK.Utils.Scenes
                     label.tooltip = "The actual Scene Asset reference.\n" +
                                     "On serialize this is also stored as the asset's path.";
 
-                    var sceneControlID = GUIUtility.GetControlID(FocusType.Passive);
+                    int sceneControlID = GUIUtility.GetControlID(FocusType.Passive);
                     EditorGUI.BeginChangeCheck();
                     {
                         _sceneAssetProperty.objectReferenceValue = EditorGUI.ObjectField(rect, label, _sceneAssetProperty.objectReferenceValue, typeof(SceneAsset), allowSceneObjects: false);
                     }
-                    var buildScene = BuildUtils.GetBuildScene(_sceneAssetProperty.objectReferenceValue);
+                    BuildUtils.BuildScene buildScene = BuildUtils.GetBuildScene(_sceneAssetProperty.objectReferenceValue);
                     if (EditorGUI.EndChangeCheck())
                     {
                         // If no valid scene asset was selected, reset the stored path accordingly
@@ -313,7 +314,7 @@ namespace CGTK.Utils.Scenes
             {
                 _sceneAssetProperty = property.FindPropertyRelative(relativePropertyPath: _SCENE_ASSET_PROPERTY_STRING);
 
-                var lines = _sceneAssetProperty.objectReferenceValue != null ? 2 : 1;
+                int lines = _sceneAssetProperty.objectReferenceValue != null ? 2 : 1;
                 
                 return BoxPadding.vertical + LineHeight * lines + _PAD_SIZE * (lines - 1);
             }
@@ -323,12 +324,12 @@ namespace CGTK.Utils.Scenes
             /// </summary>
             private static void DrawSceneInfoGUI(Rect rect, BuildUtils.BuildScene buildScene, int sceneControlID)
             {
-                var readOnly = BuildUtils.IsReadOnly();
-                var readOnlyWarning = readOnly ? "\n\nWARNING: Build Settings is not checked out and so cannot be modified." : "";
+                bool readOnly = BuildUtils.IsReadOnly();
+                string readOnlyWarning = readOnly ? "\n\nWARNING: Build Settings is not checked out and so cannot be modified." : "";
 
                 // Label Prefix
-                var iconContent = new GUIContent();
-                var labelContent = new GUIContent();
+                GUIContent iconContent = new GUIContent();
+                GUIContent labelContent = new GUIContent();
 
                 // Missing from build scenes
                 if (buildScene.buildIndex == -1)
@@ -357,8 +358,8 @@ namespace CGTK.Utils.Scenes
                 // Left status label
                 using (new EditorGUI.DisabledScope(disabled: readOnly))
                 {
-                    var _labelRect = DrawUtils.GetLabelRect(position: rect);
-                    var iconRect = _labelRect;
+                    Rect _labelRect = DrawUtils.GetLabelRect(position: rect);
+                    Rect iconRect = _labelRect;
                     iconRect.width = iconContent.image.width + _PAD_SIZE;
                     _labelRect.width -= iconRect.width;
                     _labelRect.x += iconRect.width;
@@ -367,10 +368,10 @@ namespace CGTK.Utils.Scenes
                 }
 
                 // Right context buttons
-                var buttonRect = DrawUtils.GetFieldRect(position: rect);
+                Rect buttonRect = DrawUtils.GetFieldRect(position: rect);
                 buttonRect.width /= 3;
 
-                var tooltipMsg = "";
+                string tooltipMsg = "";
                 using (new EditorGUI.DisabledScope(disabled: readOnly))
                 {
                     // NOT in build settings
@@ -425,9 +426,9 @@ namespace CGTK.Utils.Scenes
                 /// </summary>
                 public static bool ButtonHelper(Rect position, string msgShort, string msgLong, GUIStyle style, string tooltip = null)
                 {
-                    var content = new GUIContent(msgLong) { tooltip = tooltip };
+                    GUIContent content = new GUIContent(msgLong) { tooltip = tooltip };
 
-                    var longWidth = style.CalcSize(content).x;
+                    float longWidth = style.CalcSize(content).x;
                     if (longWidth > position.width) content.text = msgShort;
 
                     return GUI.Button(position, content, style);
@@ -480,8 +481,8 @@ namespace CGTK.Utils.Scenes
                 /// </summary>
                 public static bool IsReadOnly()
                 {
-                    var _curTime = Time.realtimeSinceStartup;
-                    var _timeSinceLastCheck = _curTime - _lastTimeChecked;
+                    float _curTime = Time.realtimeSinceStartup;
+                    float _timeSinceLastCheck = _curTime - _lastTimeChecked;
 
                     if (!(_timeSinceLastCheck > MIN_CHECK_WAIT)) return _cachedReadonlyVal;
 
@@ -508,14 +509,16 @@ namespace CGTK.Utils.Scenes
                     //    return true;
 
                     // Try to get status for file
-                    var _status = Provider.Status("ProjectSettings/EditorBuildSettings.asset", false);
+                    Task _status = Provider.Status("ProjectSettings/EditorBuildSettings.asset", false);
                     _status.Wait();
 
                     // If no status listed we can edit
-                    if (_status.assetList is not {Count: 1}) return true;
+                    //#if UNITY_2022_
+                    //if (_status.assetList is not {Count: 1}) return true;
+                    if (_status.assetList == null || _status.assetList.Count != 1) return true;
 
                     // If is checked out, we can edit
-                    return !_status.assetList[0].IsState(Asset.States.CheckedOutLocal);
+                    return !_status.assetList[index: 0].IsState(Asset.States.CheckedOutLocal);
                 }
 
                 /// <summary>
@@ -523,7 +526,7 @@ namespace CGTK.Utils.Scenes
                 /// </summary>
                 public static BuildScene GetBuildScene(Object sceneObject)
                 {
-                    var _entry = new BuildScene
+                    BuildScene _entry = new BuildScene
                     {
                         buildIndex = -1,
                         assetGuid = new GUID(string.Empty)
@@ -534,8 +537,8 @@ namespace CGTK.Utils.Scenes
                     _entry.assetPath = AssetDatabase.GetAssetPath(sceneObject);
                     _entry.assetGuid = new GUID(AssetDatabase.AssetPathToGUID(_entry.assetPath));
 
-                    var _scenes = EditorBuildSettings.scenes;
-                    for (var _index = 0; _index < _scenes.Length; ++_index)
+                    EditorBuildSettingsScene[] _scenes = EditorBuildSettings.scenes;
+                    for (int _index = 0; _index < _scenes.Length; ++_index)
                     {
                         if (!_entry.assetGuid.Equals(_scenes[_index].guid)) continue;
 
@@ -552,9 +555,9 @@ namespace CGTK.Utils.Scenes
                 /// </summary>
                 public static void SetBuildSceneState(BuildScene buildScene, bool enabled)
                 {
-                    var _modified = false;
-                    var _scenesToModify = EditorBuildSettings.scenes;
-                    foreach (var _curScene in _scenesToModify)
+                    bool _modified = false;
+                    EditorBuildSettingsScene[] _scenesToModify = EditorBuildSettings.scenes;
+                    foreach (EditorBuildSettingsScene _curScene in _scenesToModify)
                     {
                         if (_curScene.guid.Equals(buildScene.assetGuid))
                         {
@@ -574,7 +577,7 @@ namespace CGTK.Utils.Scenes
                 {
                     if (force == false)
                     {
-                        var _selection = EditorUtility.DisplayDialogComplex(
+                        int _selection = EditorUtility.DisplayDialogComplex(
                             title: "Add Scene To Build",
                             message: "You are about to add scene at " + buildScene.assetPath + " To the Build Settings.",
                             ok: "Add as Enabled",       // option 0
@@ -595,8 +598,8 @@ namespace CGTK.Utils.Scenes
                         }
                     }
 
-                    var _newScene = new EditorBuildSettingsScene(buildScene.assetGuid, enabled);
-                    var _tempScenes = EditorBuildSettings.scenes.ToList();
+                    EditorBuildSettingsScene _newScene = new EditorBuildSettingsScene(buildScene.assetGuid, enabled);
+                    List<EditorBuildSettingsScene> _tempScenes = EditorBuildSettings.scenes.ToList();
                     _tempScenes.Add(_newScene);
                     EditorBuildSettings.scenes = _tempScenes.ToArray();
                 }
@@ -606,10 +609,10 @@ namespace CGTK.Utils.Scenes
                 /// </summary>
                 public static void RemoveBuildScene(BuildScene buildScene, bool force = false)
                 {
-                    var _onlyDisable = false;
+                    bool _onlyDisable = false;
                     if (force == false)
                     {
-                        var _selection = -1;
+                        int _selection = -1;
 
                         const string _TITLE   =  "Remove Scene From Build";
                         
@@ -653,7 +656,7 @@ namespace CGTK.Utils.Scenes
                     // User chose to fully remove the scene from build settings
                     else
                     {
-                        var _tempScenes = EditorBuildSettings.scenes.ToList();
+                        List<EditorBuildSettingsScene> _tempScenes = EditorBuildSettings.scenes.ToList();
                         _tempScenes.RemoveAll(scene => scene.guid.Equals(buildScene.assetGuid));
                         EditorBuildSettings.scenes = _tempScenes.ToArray();
                     }
