@@ -124,10 +124,15 @@ namespace CGTK.Utils.Scenes
 		{
 			Object _obj = EditorUtility.InstanceIDToObject(instanceID: id);
 
-			if (_obj is not SceneBundle _bundle) return false;
-				
-			_bundle.Load();
-			return true;
+			//if (_obj is not SceneBundle _bundle) return false;
+			
+			if (_obj is SceneBundle _bundle)
+			{
+				_bundle.Load();
+				return true;
+			}
+
+			return false;
 		}
 		
 		/*
