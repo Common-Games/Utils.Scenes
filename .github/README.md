@@ -3,8 +3,8 @@
 
 # CGTK.Utils.Scenes
 
-![Version](https://img.shields.io/github/package-json/v/Walter-Hulsebos/Utils.Scenes?style=for-the-badge)
-![Stars](https://img.shields.io/github/stars/Walter-Hulsebos/Utils.Scenes?color=orange&style=for-the-badge)
+![Version](https://img.shields.io/github/package-json/v/Common-Games/Utils.Scenes?style=for-the-badge)
+![Stars](https://img.shields.io/github/stars/Common-Games/Utils.Scenes?color=orange&style=for-the-badge)
 [![Discord](https://img.shields.io/discord/763171539763462144?color=%237289DA&label=discord&logo=discord&style=for-the-badge)](https://discord.gg/S9wHQ96)
 
 </div>
@@ -27,9 +27,9 @@ Aims to deliver a smoother experience of working with (multiple) scenes.
 
 Part of the **CGTK** Framework. (**C**ommon **G**ames **T**ool **K**it)
 
-• [📚 Releases](https://github.com/Walter-Hulsebos/Utils.Scenes/releases)
-• [💬 Issues](  https://github.com/Walter-Hulsebos/Utils.Scenes/issues)
-• [📝 License]( https://github.com/Walter-Hulsebos/Utils.Scenes/blob/stable/LICENSE)
+• [📚 Releases](https://github.com/Common-Games/Utils.Scenes/releases)
+• [💬 Issues](  https://github.com/Common-Games/Utils.Scenes/issues)
+• [📝 License]( https://github.com/Common-Games/Utils.Scenes/blob/stable/LICENSE)
 ------
 # Installation
 
@@ -40,7 +40,7 @@ Part of the **CGTK** Framework. (**C**ommon **G**ames **T**ool **K**it)
 - Open `Window/Package Manager`
 - Click <kbd>+</kbd>
 - <kbd>Add from Git URL</kbd>
-- `https://github.com/Walter-Hulsebos/Utils.Scenes.git` <kbd>Add</kbd>
+- `https://github.com/Common-Games/Utils.Scenes.git` <kbd>Add</kbd>
 
 <b>Note that Unity doesn't give you the ability to receive updates through the Package Manager this way, you will have to update manually!!</b>
 </details>
