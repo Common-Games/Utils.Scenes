@@ -65,7 +65,7 @@ namespace CGTK.Utils.Scenes
         }
         
         //Hacky ass code, but blame the C# team for not allowing operators in enums OR extension methods.
-        public static void Deconstruct(this LoadMode mode, out Action<SceneRef> action, out bool _) //func for async?
+        public static void Deconstruct(this LoadMode mode, out Action<SceneReference> action, out bool _) //func for async?
         {
             #if UNITY_EDITOR
             
@@ -94,10 +94,10 @@ namespace CGTK.Utils.Scenes
             switch (mode)
             {
                 case Overwrite:
-                    (action, _) = (scene => LoadScene(sceneBuildIndex: scene.Index, mode: LoadSceneMode.Single), false);
+                    (action, _) = (scene => LoadScene(sceneName: scene.Path, mode: LoadSceneMode.Single), false);
                     return;
                 case Additive:
-                    (action, _) = (scene => LoadScene(sceneBuildIndex: scene.Index, mode: LoadSceneMode.Additive), false);
+                    (action, _) = (scene => LoadScene(sceneName: scene.Path, mode: LoadSceneMode.Additive), false);
                     return;
                 case AdditiveWithoutLoading:
                     (action, _) = (scene => Debug.Log(message: $"Ignoring Scene {scene}"), false);

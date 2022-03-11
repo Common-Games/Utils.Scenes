@@ -2,7 +2,7 @@
     "name": "Samples.CGTK.Utils.Scenes.ScriptUsage",
     "rootNamespace": "CGTK.Utils.Scenes.Samples.ScriptUsage",
     "references": [
-        "CGTK.Utils.Scenes"
+        "CGTK.Utils.Scenes","UnityEditor.UI","UnityEngine.UI"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

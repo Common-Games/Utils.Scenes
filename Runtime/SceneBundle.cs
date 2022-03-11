@@ -1,30 +1,15 @@
 using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.IO;
 
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 using Object = UnityEngine.Object;
 
 #if UNITY_EDITOR
 using UnityEditor;
 using UnityEditor.Callbacks;
-using UnityEditor.SceneManagement;
-using UnityEngine.UIElements;
-using UnityEditor.UIElements;
 #endif
    
 using JetBrains.Annotations;
-
-/*
-#if ODIN_INSPECTOR
-using ScriptableObject = Sirenix.OdinInspector.SerializedScriptableObject;
-#else
-using ScriptableObject = UnityEngine.ScriptableObject;
-#endif
-*/
 
 using static CGTK.Utils.Scenes.LoadMode;
 
