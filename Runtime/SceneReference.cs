@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -63,7 +64,7 @@ namespace CGTK.Utils.Scenes
         private string scenePath = string.Empty;
 
         // Use this when you want to actually have the scene path
-        public string Path
+        public string ScenePath
         {
             get
             {
@@ -91,19 +92,23 @@ namespace CGTK.Utils.Scenes
         
         public SceneReference(string scenePath)
         {
-            this.Path = scenePath;
+            this.ScenePath = scenePath;
+            #if UNITY_EDITOR
             this.sceneAsset = GetSceneAssetFromPath();
+            #endif
         }
         public SceneReference(int sceneBuildIndex)
         {
-            this.Path = SceneUtility.GetScenePathByBuildIndex(sceneBuildIndex);
+            this.ScenePath = SceneUtility.GetScenePathByBuildIndex(sceneBuildIndex);
+            #if UNITY_EDITOR
             this.sceneAsset = GetSceneAssetFromPath();
+            #endif
         }
         #if UNITY_EDITOR
         public SceneReference(SceneAsset sceneAsset)
         {
             this.sceneAsset = sceneAsset;
-            this.Path = GetScenePathFromAsset();
+            this.ScenePath = GetScenePathFromAsset();
         }
         
         #endif
@@ -112,8 +117,8 @@ namespace CGTK.Utils.Scenes
 
         #region Operators
 
-        public static implicit operator string(SceneReference reference) => reference.Path;
-        public static implicit operator int   (SceneReference reference) => SceneUtility.GetBuildIndexByScenePath(reference.Path); //TODO: Cache
+        public static implicit operator string(SceneReference reference) => reference.ScenePath;
+        public static implicit operator int   (SceneReference reference) => SceneUtility.GetBuildIndexByScenePath(reference.ScenePath); //TODO: Cache
 
         public bool Equals(Scene scene)
         {	
@@ -156,7 +161,7 @@ namespace CGTK.Utils.Scenes
         
         public void LoadAsync(LoadSceneMode mode = LoadSceneMode.Single)
         {
-            SceneManager.LoadSceneAsync(sceneName: Path, mode: mode);
+            SceneManager.LoadSceneAsync(sceneName: ScenePath, mode: mode);
         }
         
         // Called to prepare this data for serialization. Stubbed out when not in editor.
@@ -185,24 +190,11 @@ namespace CGTK.Utils.Scenes
             EditorApplication.delayCall += HandleAfterDeserialize;
             #endif
         }
-        
-        private void HandleAfterDeserialize()
-        {
-            if (IsValidSceneAsset) return;
 
-            // Asset is invalid but have path to try and recover from
-            if (string.IsNullOrEmpty(scenePath)) return;
-
-            sceneAsset = GetSceneAssetFromPath();
-            if (sceneAsset == null) scenePath = string.Empty;
-
-            if (!Application.isPlaying) EditorSceneManager.MarkAllScenesDirty();
-        }
-
-        #if UNITY_EDITOR
+#if UNITY_EDITOR
         private SceneAsset GetSceneAssetFromPath()
         {
-            return string.IsNullOrEmpty(Path) ? null : AssetDatabase.LoadAssetAtPath<SceneAsset>(assetPath: Path);
+            return string.IsNullOrEmpty(ScenePath) ? null : AssetDatabase.LoadAssetAtPath<SceneAsset>(assetPath: ScenePath);
         }
 
         private string GetScenePathFromAsset()
@@ -225,6 +217,19 @@ namespace CGTK.Utils.Scenes
             {
                 scenePath = GetScenePathFromAsset();
             }
+        }
+        
+        private void HandleAfterDeserialize()
+        {
+            if (IsValidSceneAsset) return;
+
+            // Asset is invalid but have path to try and recover from
+            if (string.IsNullOrEmpty(scenePath)) return;
+
+            sceneAsset = GetSceneAssetFromPath();
+            if (sceneAsset == null) scenePath = string.Empty;
+
+            if (!Application.isPlaying) EditorSceneManager.MarkAllScenesDirty();
         }
         #endif
         
