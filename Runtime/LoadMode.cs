@@ -33,13 +33,13 @@ namespace CGTK.Utils.Scenes
                 switch (mode)
                 {
                     case Overwrite: 
-                        action = scene => OpenScene(scenePath: scene.Path, mode: OpenSceneMode.Single);
+                        action = scene => OpenScene(scenePath: scene.ScenePath, mode: OpenSceneMode.Single);
                         return;
                     case Additive: 
-                        action = scene => OpenScene(scenePath: scene.Path, mode: OpenSceneMode.Additive);
+                        action = scene => OpenScene(scenePath: scene.ScenePath, mode: OpenSceneMode.Additive);
                         return;
                     case AdditiveWithoutLoading: 
-                        action = scene => OpenScene(scenePath: scene.Path, mode: OpenSceneMode.AdditiveWithoutLoading);
+                        action = scene => OpenScene(scenePath: scene.ScenePath, mode: OpenSceneMode.AdditiveWithoutLoading);
                         return;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
@@ -51,10 +51,10 @@ namespace CGTK.Utils.Scenes
             switch (mode)
             {
                 case Overwrite:
-                    action = scene => LoadScene(sceneName: scene.Path, mode: LoadSceneMode.Single);
+                    action = scene => LoadScene(sceneName: scene.ScenePath, mode: LoadSceneMode.Single);
                     return;
                 case Additive:
-                    action = scene => LoadScene(sceneName: scene.Path, mode: LoadSceneMode.Additive);
+                    action = scene => LoadScene(sceneName: scene.ScenePath, mode: LoadSceneMode.Additive);
                     return;
                 case AdditiveWithoutLoading:
                     action = scene => Debug.Log(message: $"Ignoring Scene {scene}");
@@ -76,13 +76,13 @@ namespace CGTK.Utils.Scenes
                 switch (mode)
                 {
                     case Overwrite:
-                        (action, _) = (scene => OpenScene(scenePath: scene.Path, mode: OpenSceneMode.Single), false);
+                        (action, _) = (scene => OpenScene(scenePath: scene.ScenePath, mode: OpenSceneMode.Single), false);
                         return;
                     case Additive:
-                        (action, _) = (scene => OpenScene(scenePath: scene.Path, mode: OpenSceneMode.Additive), false);
+                        (action, _) = (scene => OpenScene(scenePath: scene.ScenePath, mode: OpenSceneMode.Additive), false);
                         return;
                     case AdditiveWithoutLoading:
-                        (action, _) = (scene => OpenScene(scenePath: scene.Path, mode: OpenSceneMode.AdditiveWithoutLoading), false);
+                        (action, _) = (scene => OpenScene(scenePath: scene.ScenePath, mode: OpenSceneMode.AdditiveWithoutLoading), false);
                         return;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(mode), mode, null);
@@ -94,10 +94,10 @@ namespace CGTK.Utils.Scenes
             switch (mode)
             {
                 case Overwrite:
-                    (action, _) = (scene => LoadScene(sceneName: scene.Path, mode: LoadSceneMode.Single), false);
+                    (action, _) = (scene => LoadScene(sceneName: scene.ScenePath, mode: LoadSceneMode.Single), false);
                     return;
                 case Additive:
-                    (action, _) = (scene => LoadScene(sceneName: scene.Path, mode: LoadSceneMode.Additive), false);
+                    (action, _) = (scene => LoadScene(sceneName: scene.ScenePath, mode: LoadSceneMode.Additive), false);
                     return;
                 case AdditiveWithoutLoading:
                     (action, _) = (scene => Debug.Log(message: $"Ignoring Scene {scene}"), false);
