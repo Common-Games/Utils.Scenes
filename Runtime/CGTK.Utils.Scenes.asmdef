@@ -1,7 +1,7 @@
 {
     "name": "CGTK.Utils.Scenes",
     "rootNamespace": "CGTK.Utils.Scenes",
-    "references": [],
+    "references": ["guid:343deaaf83e0cee4ca978e7df0b80d21","guid:2bafac87e7f4b9b418d9448d219b01ab"],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

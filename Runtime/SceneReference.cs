@@ -4,7 +4,6 @@ using System.Linq;
 
 using UnityEngine;
 using UnityEngine.SceneManagement;
-using static CGTK.Utils.Scenes.LoadMode;
 
 #if UNITY_EDITOR
 using UnityEditor;
@@ -16,6 +15,8 @@ using Object = UnityEngine.Object;
 
 namespace CGTK.Utils.Scenes
 {
+    using static LoadMode;
+    
     // Author: JohannesMP (2018-08-12)
     // Modified by: Walter H (2022-02-07)
     //
@@ -256,10 +257,8 @@ namespace CGTK.Utils.Scenes
             */
 
             private static readonly RectOffset BoxPadding = EditorStyles.helpBox.padding;
-
-            // Made these two const btw
+            
             private const float _PAD_SIZE = 2f;
-            private const float _FOOTER_HEIGHT = 10f;
 
             private static readonly float LineHeight = EditorGUIUtility.singleLineHeight;
             private static readonly float PaddedLine = LineHeight + _PAD_SIZE;
@@ -293,7 +292,7 @@ namespace CGTK.Utils.Scenes
                     if (EditorGUI.EndChangeCheck())
                     {
                         // If no valid scene asset was selected, reset the stored path accordingly
-                        if (buildScene.scene == null) _scenePathProperty.stringValue = string.Empty;
+                        if (buildScene.scene == null) _scenePathProperty.stringValue = String.Empty;
                     }
 
                     rect.y += PaddedLine;
@@ -369,9 +368,9 @@ namespace CGTK.Utils.Scenes
 
                 // Right context buttons
                 Rect buttonRect = DrawUtils.GetFieldRect(position: rect);
-                buttonRect.width /= 3;
+                buttonRect.width /= 4;
 
-                string tooltipMsg = "";
+                string tooltipMsg;
                 using (new EditorGUI.DisabledScope(disabled: readOnly))
                 {
                     // NOT in build settings
@@ -392,15 +391,18 @@ namespace CGTK.Utils.Scenes
                     {
                         bool _isEnabled = buildScene.scene.enabled;
                         string stateString = _isEnabled ? "Disable" : "Enable";
-                        tooltipMsg = stateString + " this scene in build settings.\n" + (_isEnabled ? "It will no longer be included in builds" : "It will be included in builds") + "." + readOnlyWarning;
+                        tooltipMsg = stateString + " this scene in build settings.\n" +
+                                     (_isEnabled ? "No longer be included in builds" : "Include in builds") + "." + readOnlyWarning;
 
-                        if (DrawUtils.ButtonHelper(position: buttonRect, msgShort: stateString, msgLong: stateString + " In Build", style: EditorStyles.miniButtonLeft, tooltip: tooltipMsg))
+                        if (DrawUtils.ButtonHelper(position: buttonRect, msgShort: stateString, msgLong: stateString, style: EditorStyles.miniButtonLeft, tooltip: tooltipMsg))
                         {
                             EditorApplication.delayCall += () => { BuildUtils.SetBuildSceneState(buildScene: buildScene, enabled: !_isEnabled); };
                         }
                         buttonRect.x += buttonRect.width;
 
-                        tooltipMsg = "Completely remove this scene from build settings.\nYou will need to add it again for it to be included in builds!" + readOnlyWarning;
+                        tooltipMsg = "Completely remove this scene from build settings.\n" +
+                                     "You will need to add it again for it to be included in builds!" + readOnlyWarning;
+                        
                         if (DrawUtils.ButtonHelper(position: buttonRect, msgShort: "Remove...", msgLong: "Remove from Build", style: EditorStyles.miniButtonMid, tooltip: tooltipMsg))
                         {
                             EditorApplication.delayCall += () => { BuildUtils.RemoveBuildScene(buildScene: buildScene); };
@@ -409,6 +411,25 @@ namespace CGTK.Utils.Scenes
                     }
                 }
 
+                buttonRect.x += buttonRect.width;
+
+                tooltipMsg = "Loads the scene." + readOnlyWarning;
+                if (DrawUtils.ButtonHelper(position: buttonRect, msgShort: "Load", msgLong: "Load", style: EditorStyles.miniButtonRight, tooltip: tooltipMsg))
+                {
+                    #if UNITY_EDITOR
+                    if (Application.isPlaying)
+                    {
+                        SceneManager.LoadScene(buildScene.assetPath);
+                    }
+                    else
+                    {
+                        EditorSceneManager.OpenScene(buildScene.assetPath);
+                    }
+                    #else
+                    SceneManager.LoadScene(buildScene.assetPath);
+                    #endif
+                }
+                
                 buttonRect.x += buttonRect.width;
 
                 tooltipMsg = "Open the 'Build Settings' Window for managing scenes." + readOnlyWarning;
